@@ -24,24 +24,30 @@ public class SunbaseController {
             HttpHeaders headers=new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<SunbaseAuthRequest> request=new HttpEntity<>(authRequest,headers);
+            HttpEntity<SunbaseAuthRequest>request=new HttpEntity<>(authRequest,headers);
 
             String url="https://qa.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp";
-            ResponseEntity<String>generatedToken=restTemplate.postForEntity(url,request,String.class);
+            ResponseEntity<String >generatedToken=restTemplate.postForEntity(url,request,String.class);
 
             String responseBody = generatedToken.getBody();
-            int startIndex = responseBody.indexOf(':') + 2; // Skiping the first double quote and colon
-            int endIndex = responseBody.lastIndexOf('"'); // Excluding the last double quote
+            int startIndex = responseBody.indexOf(':') + 2; // Skip the first double quote and the colon
+            int endIndex = responseBody.lastIndexOf('"'); // Exclude the last double quote
             String token = responseBody.substring(startIndex, endIndex);
 
             System.out.println(token);
 
-            return new ResponseEntity(new TokenRequest(token), HttpStatus.OK);
+            return new ResponseEntity(new TokenRequest(token),HttpStatus.OK);
         }
         catch (Exception e){
             return new ResponseEntity(new ExceptionResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/hello")
+    public  String sayHello(){
+        return "Hello Aniket";
+    }
+
 
 
     @GetMapping("/customer-list")
@@ -50,7 +56,7 @@ public class SunbaseController {
             HttpHeaders headers=new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization",authorizationHeader);
-            //setting query params..
+            //set query paramerters..
             String url="https://qa.sunbasedata.com/sunbase/portal/api/assignment.jsp";
 
             UriComponentsBuilder builder=UriComponentsBuilder.fromHttpUrl(url).queryParam("cmd","get_customer_list");
@@ -70,5 +76,5 @@ public class SunbaseController {
         catch (Exception e){
             return new ResponseEntity(new ExceptionResponseDto(e.getMessage()), HttpStatus.BAD_REQUEST);
         }
-    }
+    };
 }

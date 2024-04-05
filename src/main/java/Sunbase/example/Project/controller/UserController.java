@@ -54,7 +54,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/findBySearch/{search}")
+    @GetMapping("/find-by-search/{search}")
     public ResponseEntity findBySearch(@PathVariable("search") String search,@RequestParam("value") String value) {
         try {
             List<UserResponseDto> responseDto = userService.getUsersBy(search,value);
@@ -65,7 +65,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/findById")
+    @GetMapping("/find-by-id")
     public ResponseEntity findById(@RequestParam("id")int userId){
         try{
             UserResponseDto userResponseDto=userService.getUser(userId);

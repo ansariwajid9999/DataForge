@@ -2,6 +2,7 @@ package Sunbase.example.Project.security;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -13,16 +14,18 @@ import java.util.function.Function;
 
 @Component
 public class JwtHelper {
-    public static final long JWT_TOKEN_VALIDITY = 6 * 60 * 60;
+    //requirement :
+    public static final long JWT_TOKEN_VALIDITY = 5 * 60 * 60;
 
+    //public static final long JWT_TOKEN_VALIDITY =  60;
     private String secret = "afafasfafafasfasfasfafacasdasfasxASFACASDFACASDFASFASFDAFASFASDAADSCSDFADCVSGCFVADXCcadwavfsfarvf";
 
-    //retrieving username from jwt token
+    //retrieve username from jwt token
     public String getUsernameFromToken(String token) {
         return getClaimFromToken(token, Claims::getSubject);
     }
 
-    //retrieving expiration date from jwt token
+    //retrieve expiration date from jwt token
     public Date getExpirationDateFromToken(String token) {
         return getClaimFromToken(token, Claims::getExpiration);
     }
@@ -37,13 +40,12 @@ public class JwtHelper {
             return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody();
 
         } catch (Exception e) {
-            //Handle the exception carefully , For example, to prevent from empty Claims object
-            System.out.println("JWT is mal-formed: " + e.getMessage());
+            System.out.println("JWT is malformed: " + e.getMessage());
             return null;
         }
     }
 
-    //check Weather the token has expired
+    //check if the token has expired
     private Boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
         return expiration.before(new Date());
@@ -62,7 +64,7 @@ public class JwtHelper {
                 .signWith(SignatureAlgorithm.HS512, secret).compact();
     }
 
-    //validating token
+    //validate token
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = getUsernameFromToken(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
