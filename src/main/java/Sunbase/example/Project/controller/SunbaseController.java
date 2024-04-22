@@ -27,7 +27,7 @@ public class SunbaseController {
             HttpEntity<SunbaseAuthRequest>request=new HttpEntity<>(authRequest,headers);
 
             String url="https://qa.sunbasedata.com/sunbase/portal/api/assignment_auth.jsp";
-            ResponseEntity<String >generatedToken=restTemplate.postForEntity(url,request,String.class);
+            ResponseEntity<String>generatedToken=restTemplate.postForEntity(url,request,String.class);
 
             String responseBody = generatedToken.getBody();
             int startIndex = responseBody.indexOf(':') + 2; // Skip the first double quote and the colon
@@ -45,7 +45,7 @@ public class SunbaseController {
 
     @GetMapping("/hello")
     public  String sayHello(){
-        return "Hello Aniket";
+        return "Hello Wajid";
     }
 
 
@@ -56,7 +56,7 @@ public class SunbaseController {
             HttpHeaders headers=new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
             headers.set("Authorization",authorizationHeader);
-            //set query paramerters..
+            //set query parameters..
             String url="https://qa.sunbasedata.com/sunbase/portal/api/assignment.jsp";
 
             UriComponentsBuilder builder=UriComponentsBuilder.fromHttpUrl(url).queryParam("cmd","get_customer_list");
